@@ -13,7 +13,7 @@ public class SpiralGenerator
     public SpiralGenerator(Point center, double spiralStep = 1, double deltaPhiDegrees = (Math.PI / 180))
     {
         if (spiralStep <= 0)
-            throw new ArgumentException("Spiral step must be greater than zero");
+            throw new ArgumentException("Шаг спирали должен быть больше 0");
 
         this.center = center;
         phi = 0;

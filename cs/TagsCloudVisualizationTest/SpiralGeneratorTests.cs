@@ -41,7 +41,7 @@ public class SpiralGeneratorTests
         var points = new HashSet<Point>();
         const int numberOfPoints = 100;
 
-        for (int i = 0; i < numberOfPoints; i++)
+        for (var i = 0; i < numberOfPoints; i++)
         {
             points.Add(generator.GetNextPoint());
         }
@@ -56,21 +56,22 @@ public class SpiralGeneratorTests
         const int numberOfPoints = 50;
         var initialPoint = generator.GetNextPoint();
         var initialDistance = GetDistanceFromCenter(initialPoint);
-        var halfwayPoint = numberOfPoints / 2;
-
-        // Генерируем половину точек
-        for (int i = 0; i < halfwayPoint; i++)
+        const int halfwayPoint = numberOfPoints / 2;
+        
+        for (var i = 0; i < halfwayPoint; i++)
         {
             generator.GetNextPoint();
         }
+        
         var middlePoint = generator.GetNextPoint();
         var middleDistance = GetDistanceFromCenter(middlePoint);
 
-        // Генерируем оставшиеся точки
-        for (int i = halfwayPoint; i < numberOfPoints; i++)
+     
+        for (var i = halfwayPoint; i < numberOfPoints; i++)
         {
             generator.GetNextPoint();
         }
+        
         var finalPoint = generator.GetNextPoint();
         var finalDistance = GetDistanceFromCenter(finalPoint);
 
@@ -84,7 +85,7 @@ public class SpiralGeneratorTests
         const int numberOfPoints = 100;
         Point? previousPoint = null;
 
-        for (int i = 0; i < numberOfPoints; i++)
+        for (var i = 0; i < numberOfPoints; i++)
         {
             var currentPoint = generator.GetNextPoint();
             if (previousPoint != null)

@@ -43,9 +43,9 @@ public class RectangleLayouterTests
 
         var rectangles = layouter.GetRectangles();
 
-        for (int i = 0; i < rectangles.Count; i++)
+        for (var i = 0; i < rectangles.Count; i++)
         {
-            for (int j = i + 1; j < rectangles.Count; j++)
+            for (var j = i + 1; j < rectangles.Count; j++)
             {
                 rectangles[i].IntersectsWith(rectangles[j])
                     .Should().BeFalse($"Прямоугольники {i} и {j} пересекаются.");

@@ -2,18 +2,11 @@
 
 namespace TagsCloudVisualization;
 
-public class RectangleLayouter
+public class RectangleLayouter(Point center)
 {
-    private readonly SpiralGenerator spiralGenerator;
-    private readonly RectangleShifter rectangleShifter;
-    private readonly List<Rectangle> rectangles;
-
-    public RectangleLayouter(Point center)
-    {
-        spiralGenerator = new SpiralGenerator(center);
-        rectangleShifter = new RectangleShifter(center);
-        rectangles = new List<Rectangle>();
-    }
+    private readonly SpiralGenerator spiralGenerator = new(center);
+    private readonly RectangleShifter rectangleShifter = new(center);
+    private readonly List<Rectangle> rectangles = new();
 
     public Rectangle PutNextRectangle(Size rectangleSize)
     {
