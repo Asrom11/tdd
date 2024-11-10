@@ -24,7 +24,7 @@ public class SpiralGeneratorTests
         Action act = () => new SpiralGenerator(center, -1);
         
         act.Should().Throw<ArgumentException>()
-           .WithMessage("Spiral step must be greater than zero");
+           .WithMessage("Шаг спирали должен быть больше 0");
     }
 
     [Test]
