@@ -5,7 +5,6 @@ namespace TagsCloudVisualization;
 public class RectangleLayouter(Point center)
 {
     private readonly SpiralGenerator spiralGenerator = new(center);
-    private readonly RectangleShifter rectangleShifter = new(center);
     private readonly List<Rectangle> rectangles = new();
 
     public Rectangle PutNextRectangle(Size rectangleSize)
@@ -22,8 +21,7 @@ public class RectangleLayouter(Point center)
                 point.Y - rectangleSize.Height / 2);
             newRectangle = new Rectangle(location, rectangleSize);
         } while (rectangles.Any(r => r.IntersectsWith(newRectangle)));
-
-        newRectangle = rectangleShifter.ShiftRectangleToCenter(newRectangle, rectangles);
+        
         rectangles.Add(newRectangle);
         return newRectangle;
     }

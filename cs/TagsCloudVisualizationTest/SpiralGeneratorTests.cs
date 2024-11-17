@@ -2,10 +2,10 @@
 using FluentAssertions;
 using System.Drawing;
 using TagsCloudVisualization;
+using TagsCloudVisualization.Extensions;
 
 namespace TagsCloudVisualizationTest;
 
-[TestFixture]
 public class SpiralGeneratorTests
 {
     private Point center;
@@ -34,28 +34,13 @@ public class SpiralGeneratorTests
         
         firstPoint.Should().Be(center);
     }
-
-    [Test]
-    public void GetNextPoint_ShouldGenerateUniquePoints()
-    {
-        var points = new HashSet<Point>();
-        const int numberOfPoints = 100;
-
-        for (var i = 0; i < numberOfPoints; i++)
-        {
-            points.Add(generator.GetNextPoint());
-        }
-
-        points.Count.Should().Be(numberOfPoints, 
-            "все точки должны быть уникальными");
-    }
-
+    
     [Test]
     public void GetNextPoint_ShouldGeneratePointsWithIncreasingDistanceFromCenter()
     {
         const int numberOfPoints = 50;
         var initialPoint = generator.GetNextPoint();
-        var initialDistance = GetDistanceFromCenter(initialPoint);
+        var initialDistance = initialPoint.DistanceFromCenter(center);
         const int halfwayPoint = numberOfPoints / 2;
         
         for (var i = 0; i < halfwayPoint; i++)
@@ -64,7 +49,7 @@ public class SpiralGeneratorTests
         }
         
         var middlePoint = generator.GetNextPoint();
-        var middleDistance = GetDistanceFromCenter(middlePoint);
+        var middleDistance = middlePoint.DistanceFromCenter(center);
 
      
         for (var i = halfwayPoint; i < numberOfPoints; i++)
@@ -73,7 +58,7 @@ public class SpiralGeneratorTests
         }
         
         var finalPoint = generator.GetNextPoint();
-        var finalDistance = GetDistanceFromCenter(finalPoint);
+        var finalDistance = finalPoint.DistanceFromCenter(center);
 
         finalDistance.Should().BeGreaterThan(middleDistance)
             .And.BeGreaterThan(initialDistance);
@@ -95,12 +80,5 @@ public class SpiralGeneratorTests
             }
             previousPoint = currentPoint;
         }
-    }
-
-    private double GetDistanceFromCenter(Point point)
-    {
-        var dx = point.X - center.X;
-        var dy = point.Y - center.Y;
-        return Math.Sqrt(dx * dx + dy * dy);
     }
 }

@@ -1,11 +1,11 @@
-﻿using System.Drawing;
+﻿using System.Diagnostics;
+using System.Drawing;
 using FluentAssertions;
 using NUnit.Framework;
 using TagsCloudVisualization;
 
 namespace TagsCloudVisualizationTest;
 
-[TestFixture]
 public class RectangleLayouterTests
 {
     private RectangleLayouter layouter;

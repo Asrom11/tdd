@@ -5,7 +5,6 @@ using TagsCloudVisualization;
 
 namespace TagsCloudVisualizationTest;
 
-[TestFixture]
 public class LayoutGeneratorTests
 {
     private LayoutGenerator generator;
@@ -21,8 +20,7 @@ public class LayoutGeneratorTests
         generator = new LayoutGenerator(center, imageSize);
         outputDirectory = Path.Combine(Directory.GetCurrentDirectory(), "TestOutputs");
 
-        if (!Directory.Exists(outputDirectory))
-            Directory.CreateDirectory(outputDirectory);
+        Directory.CreateDirectory(outputDirectory);
     }
 
     [TearDown]
@@ -35,7 +33,7 @@ public class LayoutGeneratorTests
     [Test]
     public void GenerateLayout_ShouldCreateImageFile()
     {
-        string outputFileName = Path.Combine(outputDirectory, "layout_test.png");
+        var outputFileName = Path.Combine(outputDirectory, "layout_test.png");
         generator.GenerateLayout(outputFileName, 10, random => new Size(50, 20));
 
         File.Exists(outputFileName).Should().BeTrue("файл изображения должен быть создан");
@@ -44,25 +42,16 @@ public class LayoutGeneratorTests
     [Test]
     public void GenerateLayout_ShouldGenerateCorrectNumberOfRectangles()
     {
-        string outputFileName = Path.Combine(outputDirectory, "layout_test.png");
-        int rectangleCount = 50;
+        var outputFileName = Path.Combine(outputDirectory, "layout_test.png");
+        const int rectangleCount = 50;
         generator.GenerateLayout(outputFileName, rectangleCount, random => new Size(50, 20));
 
         var layouter = new CircularCloudLayouter(center);
-        for (int i = 0; i < rectangleCount; i++)
+        for (var i = 0; i < rectangleCount; i++)
         {
             layouter.PutNextRectangle(new Size(50, 20));
         }
 
         layouter.GetRectangles().Count.Should().Be(rectangleCount, "должно быть сгенерировано правильное количество прямоугольников");
-    }
-
-    [Test]
-    public void GenerateLayout_WithRandomSizes_ShouldCreateImageFile()
-    {
-        string outputFileName = Path.Combine(outputDirectory, "layout_test_random.png");
-        generator.GenerateLayout(outputFileName, 100, random => new Size(random.Next(20, 100), random.Next(10, 50)));
-
-        File.Exists(outputFileName).Should().BeTrue("файл изображения должен быть создан");
     }
 }

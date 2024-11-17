@@ -2,20 +2,23 @@
 using FluentAssertions;
 using NUnit.Framework;
 using NUnit.Framework.Interfaces;
+using TagsCloudVisualization;
+using TagsCloudVisualization.Extensions;
 
 namespace TagsCloudVisualizationTest;
 
-[TestFixture]
 public class CircularCloudLayouterTests
 {
     private CircularCloudLayouter layouter;
     private Point center;
+    private CloudImageRenderer render;
 
     [SetUp]
     public void SetUp()
     {
         center = new Point(0, 0);
         layouter = new CircularCloudLayouter(center);
+        render = new CloudImageRenderer(new Size(800, 600));
     }
 
     [Test]
@@ -56,28 +59,7 @@ public class CircularCloudLayouterTests
             }
         }
     }
-
-    [Test]
-    public void PutNextRectangle_RectanglesShouldFormACircleShape()
-    {
-        var sizes = Enumerable.Repeat(new Size(10, 10), 100).ToList();
-
-        foreach (var size in sizes)
-        {
-            layouter.PutNextRectangle(size);
-        }
-
-        var rectangles = layouter.GetRectangles();
-        var distances = rectangles
-            .Select(r => GetDistanceToCenter(GetRectangleCenter(r), center))
-            .ToList();
-
-        var averageDistance = distances.Average();
-        var maxDistance = distances.Max();
-
-        maxDistance.Should().BeLessOrEqualTo(averageDistance * 2, "Прямоугольники расположены не компактно.");
-    }
-
+    
     [Test]
     public void GenerateLayout_ShouldCreateCircularCloud()
     {
@@ -89,10 +71,9 @@ public class CircularCloudLayouterTests
         }
 
         var rectangles = layouter.GetRectangles();
-        rectangles.Count.Should().Be(100);
         
         var distances = rectangles
-            .Select(r => GetDistanceToCenter(GetRectangleCenter(r), center))
+            .Select(r => GetRectangleCenter(r).DistanceFromCenter(center))
             .ToList();
 
         var averageDistance = distances.Average();
@@ -101,20 +82,27 @@ public class CircularCloudLayouterTests
         maxDistance.Should().BeLessOrEqualTo(averageDistance * 2, "Облако не является компактным.");
     }
 
+    [Test]
+    public void GenerateLayout_ShouldPlaceAllRectangles()
+    {
+        var random = new Random();
+        for (var i = 0; i < 100; i++)
+        {
+            var size = new Size(random.Next(10, 50), random.Next(10, 50));
+            layouter.PutNextRectangle(size);
+        }
+
+        var rectangles = layouter.GetRectangles();
+        rectangles.Count.Should().Be(100, "All rectangles should be placed successfully");
+    }
+    
     private Point GetRectangleCenter(Rectangle rectangle)
     {
         return new Point(
             rectangle.Left + rectangle.Width / 2,
             rectangle.Top + rectangle.Height / 2);
     }
-
-    private double GetDistanceToCenter(Point point, Point center)
-    {
-        var dx = point.X - center.X;
-        var dy = point.Y - center.Y;
-        return Math.Sqrt(dx * dx + dy * dy);
-    }
-
+    
     [TearDown]
     public void TearDown()
     {
@@ -129,8 +117,9 @@ public class CircularCloudLayouterTests
         Directory.CreateDirectory(directory);
 
         var filePath = Path.Combine(directory, $"{testName}.png");
-
-        layouter.SaveImage(filePath, new Size(800, 600));
+        var rectangles = layouter.GetRectangles();
+        
+        render.SaveToFile(filePath, rectangles);
         Console.WriteLine($"Tag cloud visualization saved to file {filePath}");
     }
 }
