@@ -52,4 +52,27 @@ public class RectangleLayouterTests
             }
         }
     }
+    
+    [Test]
+    public void PutNextRectangle_WithManyRectangles_ShouldCompleteInReasonableTime()
+    {
+        const int rectangleCount = 10000;
+        var random = new Random(42);
+        var stopwatch = new Stopwatch();
+        var rectangles = new List<Rectangle>();
+        
+        stopwatch.Start();
+        for (var i = 0; i < rectangleCount; i++)
+        {
+            var size = new Size(
+                random.Next(10, 50),
+                random.Next(10, 50));
+        
+            rectangles.Add(layouter.PutNextRectangle(size));
+        }
+        stopwatch.Stop();
+        
+        stopwatch.Elapsed.Should().BeLessThan(TimeSpan.FromSeconds(3), 
+            "размещение большого количества прямоугольников должно выполняться быстро");
+    }
 }
