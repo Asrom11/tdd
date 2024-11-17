@@ -56,7 +56,7 @@ public class RectangleLayouterTests
     [Test]
     public void PutNextRectangle_WithManyRectangles_ShouldCompleteInReasonableTime()
     {
-        const int rectangleCount = 10000;
+        const int rectangleCount = 1000000;
         var random = new Random(42);
         var stopwatch = new Stopwatch();
         var rectangles = new List<Rectangle>();

@@ -6,7 +6,7 @@ public class RectangleLayouter(Point center)
 {
     private readonly SpiralGenerator spiralGenerator = new(center);
     private readonly List<Rectangle> rectangles = new();
-
+    private readonly Grid grid = new();
     public Rectangle PutNextRectangle(Size rectangleSize)
     {
         if (rectangleSize.Width <= 0 || rectangleSize.Height <= 0)
@@ -20,8 +20,9 @@ public class RectangleLayouter(Point center)
                 point.X - rectangleSize.Width / 2,
                 point.Y - rectangleSize.Height / 2);
             newRectangle = new Rectangle(location, rectangleSize);
-        } while (rectangles.Any(r => r.IntersectsWith(newRectangle)));
+        } while (grid.IsIntersecting(newRectangle));
         
+        grid.AddRectangle(newRectangle);
         rectangles.Add(newRectangle);
         return newRectangle;
     }
